@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navigation">
+    <div>
+        <button>Hello</button>
+    </div>
+    <div>
+        <button>home</button>
+    </div>
+    <div>
+        <button>login</button>
+    </div>
+</nav>
+{% block content %}
+{% endblock %}
+</body>
+</html>
