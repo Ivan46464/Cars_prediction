@@ -3,22 +3,57 @@
 <head>
      {% load static %}
     <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/home.css' %}">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
 <nav class="navigation">
+    <div class="nav-logo">
+        <a href="/">
+            <img src="{% static 'images/car.svg' %}" alt="Car Price Predictor logo"/>
+        </a>
+        <p>Car Price Predictor</p>
+    </div>
+    <div class="nav-content">
     <div>
-        <button>Hello</button>
+        <a href="/">
+        <button class="nav_button">Home</button>
+        </a>
     </div>
     <div>
-        <button>home</button>
+        <a href="/upload_image">
+        <button class="nav_button">Image upload</button>
+        </a>
     </div>
     <div>
-        <button>login</button>
+        <a href="/api/login">
+        <button class="nav_button">Login</button>
+        </a>
+    </div>
     </div>
 </nav>
 {% block content %}
 {% endblock %}
+<nav class="bottom_navigation">
+    <div class="contact_us">
+        <h3>Contact us</h3>
+        <p>Email: support@carpricepredictor.com</p>
+        <p>Phone: +1 234 567 890</p>
+    </div>
+    <div class="follow_us">
+        <h3>Follow us</h3>
+        <div class="follow_icons">
+            <img src="{% static 'images/icons8-facebook.svg' %}" alt="facebook"/>
+            <img src="{% static 'images/icons8-instagram.svg' %}" alt="instagram"/>
+            <img src="{% static 'images/icons8-tik-tok.svg' %}" alt="tik tok"/>
+        </div>
+    </div>
+    <div class="resources">
+        <h3>Resources</h3>
+        <p><a>Privacy Policy</a></p>
+        <p><a>Terms of Service</a></p>
+    </div>
+</nav>
 </body>
 </html>

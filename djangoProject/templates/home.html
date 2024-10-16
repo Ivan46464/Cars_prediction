@@ -1,17 +1,57 @@
 {% extends 'base.html' %}
-
+{% load static %}
+    
 {% block title %}
 Home
 {% endblock %}
 {% block content %}
 <div class="home_image">
-
+    <img class="cars_image" src="{% static 'images/95e110c2c16f3caa03a257213fe34b3e.0000000.jpg' %}" alt="cars"/>
 </div>
 <h1>Welcome to Car Price Predictor</h1>
 <h3>Discover the most accurate car price predictions with our cutting-edge technology. Upload a car image and get instant results.</h3>
 <div class="reasons_home">
-  <div>
-        
-  </div>
+    <div class="reason">
+        <img src="" alt="fast and accuracy"/>
+        <h3>Fast & Accurate</h3>
+        <p>Get reliable price predictions quicly with our advanced algorithms</p>
+    </div>
+    <div class="reason">
+        <img src="" alt="user friendly"/>
+        <h3>User-Friendly</h3>
+        <p>Experience an intuitive interface that's easy to navigate.</p>   
+    </div>
+    <div class="reason">
+        <img src="" alt="Secure & Private"/>
+        <h3>Secure & Private</h3>
+        <p>Your data is safe with us, ensuring privacy and confidentiality</p>   
+    </div>
 </div>
+<div class="try_it_out">
+    <p>Ready to Predict Your Car's Price?</p>
+    <p>Upload an image of your car and let us do the rest!</p>
+    <button class="upload_file" onclick="navigateToUpload()">Upload</button>
+   
+</div>
+    <script>
+    function navigateToUpload() {
+        window.location.href = "http://127.0.0.1:8000/upload_image";
+    }
+</script>
 {% endblock %}
+// input type="file" id="myFile" name="filename" onchange="updateFileName()" style="display: none;"/
+//     label for="myFile" id="fileLabel" class="custom-file-label">Choose a file /label
+//     script
+// function updateFileName() {
+//     const input = document.getElementById('myFile');
+//     const label = document.getElementById('fileLabel');
+//     
+//    
+//     if (input.files.length > 0) {
+//         const fileName = input.files[0].name;
+//         label.innerHTML = fileName;
+//     } else {
+//         label.innerHTML = 'Choose a file';
+//     }
+// }
+// /script
