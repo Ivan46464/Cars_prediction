@@ -22,5 +22,6 @@ from cars_project.views import views_pages
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views_pages.home_view, name='home'),
+    path('upload_image', views_pages.upload_image_view, name='upload_image'),
     path('api/', include('cars_project.urls'), name='api'),
 ]
