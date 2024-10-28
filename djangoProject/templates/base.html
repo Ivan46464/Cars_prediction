@@ -3,7 +3,8 @@
 <head>
      {% load static %}
     <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
-    <link rel="stylesheet" href="{% static 'CSS/home.css' %}">
+   
+   {% block extra_styles %}{% endblock extra_styles %}
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
