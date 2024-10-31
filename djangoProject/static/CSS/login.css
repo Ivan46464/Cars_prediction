@@ -2,7 +2,7 @@
     position: absolute;
     bottom: 0;
 }
-.bottom_navigation h3{
+.bottom_navigation p, h3{
      color:white;
 }
 .container{
@@ -79,7 +79,5 @@
 .submit-btn:hover {
     background-color: #45a049;
 }
-a:hover{
-    color: #44f114;
-}
+
 

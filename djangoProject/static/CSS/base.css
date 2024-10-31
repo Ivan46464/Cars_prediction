@@ -65,6 +65,9 @@
 .resources a{
     cursor: pointer;
 }
+.resources a:hover{
+    color:#44f114;
+}
 
 .contact_us{
     align-items: start;
