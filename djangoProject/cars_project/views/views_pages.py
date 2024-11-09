@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from cars_project.forms import CarForm, LoginForm
+from cars_project.forms import CarForm, LoginForm, RegisterForm
 
 
 def home_view(request):
@@ -10,3 +10,6 @@ def upload_image_view(request):
 def login_view(request):
   form = LoginForm()
   return render(request, "login.html", {'form': form})
+def register_view(request):
+  form = RegisterForm()
+  return render(request, "register.html", {'form': form})

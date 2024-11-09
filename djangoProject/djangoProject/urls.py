@@ -24,5 +24,6 @@ urlpatterns = [
     path('', views_pages.home_view, name='home'),
     path('upload_image', views_pages.upload_image_view, name='upload_image'),
     path('login', views_pages.login_view, name='login'),
+    path('register', views_pages.register_view, name='register'),
     path('api/', include('cars_project.urls'), name='api'),
 ]

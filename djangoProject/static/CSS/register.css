@@ -1,6 +1,4 @@
-.bottom_navigation{
-    margin-top:84px;
-}
+
 .bottom_navigation p, h3{
      color:white;
 }
@@ -78,7 +76,7 @@
 .submit-btn:hover {
     background-color: #45a049;
 }
+
 a:hover{
     color:#44f114;
 }
-

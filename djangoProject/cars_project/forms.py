@@ -10,3 +10,8 @@ class CarForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=100)
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(label='Username', max_length=100)
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    email = forms.EmailField(label='Email', max_length=100)
