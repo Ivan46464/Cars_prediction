@@ -1,28 +1,79 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block extra_styles %}
- <link rel="stylesheet" href="{% static 'CSS/login.css' %}">
- {% endblock extra_styles %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'CSS/login.css' %}">
+{% endblock extra_styles %}
+
 {% block title %}
-Upload image
+Login
 {% endblock %}
+
 {% block content %}
-    <div class="container">
+<div class="container">
     <div class="form-container">
         <h2>Login</h2>
-        <p>If you do not have account <a href="/register">register</a> first!</p>
-        <form method="post" enctype="multipart/form-data">
+        <p>If you do not have an account, <a href="/register">register</a> first!</p>
+        <form id="loginForm" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">Username</label>
+                <label for="id_username">Username</label>
                 {{ form.username }}
             </div>
             <div class="form-group">
-                <label for="{{ form.password.id_for_label }}">Password</label>
+                <label for="id_password">Password</label>
                 {{ form.password }}
             </div>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
-</div>  
+    <div id="result"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('loginForm');
+        const resultDiv = document.getElementById('result');
+
+        loginForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const formData = new FormData(loginForm);
+
+            try {
+                // Prepare data for API request
+                const payload = {
+                    username: formData.get('username'),
+                    password: formData.get('password')
+                };
+
+                // Make API call
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                   
+                    // Optionally, redirect the user to another page
+                    window.localStorage.setItem('authToken', result.token);
+                    setTimeout(() => {
+                        window.location.href = '/'; // Change this to your desired redirect URL
+                    }, 2000);
+                } else {
+                    // Handle login errors
+                    resultDiv.innerHTML = `<p>Error: ${result.details}</p>`;
+                }
+            } catch (error) {
+                // Handle network or unexpected errors
+                resultDiv.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+            }
+        });
+    });
+</script>
 {% endblock content %}

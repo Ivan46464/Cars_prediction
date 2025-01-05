@@ -1,58 +1,127 @@
 {% extends 'base.html' %}
 {% load static %}
 
-    {% block extra_styles %}
- <link rel="stylesheet" href="{% static 'CSS/upload_image.css' %}">
- {% endblock extra_styles %}
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'CSS/upload_image.css' %}">
+{% endblock extra_styles %}
+
 {% block title %}
-Upload image
+Upload Image
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="form-container">
         <h2>Upload Car Details</h2>
-        <form method="post" enctype="multipart/form-data">
+        <form id="carForm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.model.id_for_label }}">Model</label>
+                <label for="id_model">Model</label>
                 {{ form.model }}
             </div>
             <div class="form-group">
-                <label for="{{ form.year.id_for_label }}">Year</label>
+                <label for="id_year">Year</label>
                 {{ form.year }}
             </div>
             <div class="form-group">
-                <label for="{{ form.mileage.id_for_label }}">Mileage</label>
+                <label for="id_mileage">Mileage</label>
                 {{ form.mileage }}
             </div>
             <div class="form-group">
-                <label for="{{ form.image.id_for_label }}">Image</label>
-                {{ form.image }}
+                <label for="id_image">Image</label>
+                <input type="file" name="image" id="id_image" accept="image/*">
                 <img id="imagePreview" class="image-preview" alt="Image Preview">
             </div>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
+         <div id="result"></div>
     </div>
-</div>  
-    <script>
-    // JavaScript to display the image preview
-    document.addEventListener('DOMContentLoaded', () => {
-        const imageInput = document.querySelector('#{{ form.image.id_for_label }}');
-        const imagePreview = document.querySelector('#imagePreview');
+   
+</div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const carForm = document.getElementById('carForm');
+        const imageInput = document.getElementById('id_image');
+        const imagePreview = document.getElementById('imagePreview');
+        const resultDiv = document.getElementById('result');
+        const token = window.localStorage.getItem('authToken');
+
+        // Image preview functionality
         imageInput.addEventListener('change', event => {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = e => {
                     imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block'; // Show the preview image
+                    imagePreview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             } else {
-                imagePreview.style.display = 'none'; // Hide preview if no image selected
+                imagePreview.style.display = 'none';
+            }
+        });
+
+        // Form submission handling
+        carForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const formData = new FormData(carForm);  // Ensure FormData includes the file input
+
+            // Check if file is included
+            if (!formData.get('image')) {
+                resultDiv.innerHTML = `<p>Error: No file uploaded</p>`;
+                return;
+            }
+
+            // Convert other inputs to integers
+            const carModel = parseInt(formData.get('model'));
+            const year = parseInt(formData.get('year'));
+            const mileage = parseInt(formData.get('mileage'));
+
+            if (isNaN(carModel) || isNaN(year) || isNaN(mileage)) {
+                resultDiv.innerHTML = `<p>Error: Invalid car details (model, year, or mileage).</p>`;
+                return;
+            }
+
+            // Append the converted values back to the form data
+            formData.set('car_model', carModel);
+            formData.set('year', year);
+            formData.set('mileage', mileage);
+
+            // Rename the file input field to match the backend API expectation
+            const file = formData.get('image');
+            formData.delete('image');  // Remove the 'image' key
+            formData.append('file', file);  // Append the file under 'file' key, as expected by the API
+
+            try {
+                // Call the API endpoint
+                const response = await fetch('/api/combine', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Authorization': `Token ${token}`  // Add the token to the header
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Display results
+                    resultDiv.innerHTML = `
+                        <h3>Condition: ${result.condition_result}</h3>
+                        <h3>Predicted Price: $${result.predicted_price}</h3>
+                    `;
+                } else {
+                    // Handle API errors
+                    resultDiv.innerHTML = `<p>Error: ${result.error}</p>`;
+                }
+            } catch (error) {
+                // Handle network or unexpected errors
+                resultDiv.innerHTML = `<p>An error occurred: ${error.message}</p>`;
             }
         });
     });
 </script>
+
 {% endblock content %}

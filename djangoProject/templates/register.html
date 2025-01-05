@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block extra_styles %}
- <link rel="stylesheet" href="{% static 'CSS/register.css' %}">
- {% endblock extra_styles %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'CSS/register.css' %}">
+{% endblock extra_styles %}
+
 {% block title %}
 Upload image
 {% endblock %}
+
 {% block content %}
-    <div class="container">
+<div class="container">
     <div class="form-container">
-        <h2>Login</h2>
-        <p>If you already have account <a href="/login">login</a> here!</p>
-        <form method="post" enctype="multipart/form-data">
+        <h2>Register</h2>
+        <p>If you already have an account, <a href="/login">login</a> here!</p>
+        <form id="registerForm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">Email</label>
@@ -28,5 +31,48 @@ Upload image
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
-</div>  
+    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('registerForm');
+        
+
+        // Form submission handling
+        registerForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const formData = new FormData(registerForm);
+
+            try {
+                // Send the form data to the RegisterUser API endpoint
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Handle successful registration
+                    window.localStorage.setItem('authToken', result.token);
+
+                    // Redirect to the home page
+                    window.location.href = '/'; // Redirect to home page
+                } else {
+                    // Handle validation errors
+                    resultDiv.innerHTML = `<p>Error: ${result.non_field_errors || result.email || result.username || result.password}</p>`;
+                }
+            } catch (error) {
+                // Handle network or unexpected errors
+                resultDiv.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+            }
+        });
+    });
+</script>
+
+
 {% endblock content %}

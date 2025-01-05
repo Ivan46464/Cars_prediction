@@ -5,5 +5,8 @@ urlpatterns = [
     path('register', RegisterUser.as_view(), name='register'),
     path('login', LoginUser.as_view(), name='login'),
     path('logout', LogoutUser.as_view(), name='logout'),
+    path('predict_damage', Predict_damage.as_view(), name='predict_damage'),
+    path('predict_price',PredictCarPriceAPIView.as_view(), name='predict_price'),
+    path('combine',CombinedPredictionAPIView.as_view(), name='combine'),
 
     ]

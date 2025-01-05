@@ -27,15 +27,16 @@
         <button class="nav_button">Image upload</button>
         </a>
     </div>
-    <div>
-        <a href="/login">
-        <button class="nav_button">Login</button>
-        </a>
+    <div id="loginLogoutDiv">
+        <!-- Button will be dynamically replaced here by JS -->
+        <button id="loginLogoutButton" class="nav_button">Login</button>
     </div>
     </div>
 </nav>
+
 {% block content %}
 {% endblock %}
+
 <nav class="bottom_navigation">
     <div class="contact_us">
         <h3>Contact us</h3>
@@ -56,5 +57,47 @@
         <p><a>Terms of Service</a></p>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginLogoutButton = document.getElementById('loginLogoutButton');
+        const loginLogoutDiv = document.getElementById('loginLogoutDiv');
+        const token = window.localStorage.getItem('authToken');
+
+        // If the token exists, show the Logout button
+        if (token) {
+            loginLogoutButton.textContent = 'Logout';
+            loginLogoutButton.onclick = async () => {
+                try {
+                    const response = await fetch('/api/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Token ${token}`,
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        // Successfully logged out, remove token from localStorage
+                        window.localStorage.removeItem('authToken');
+                        // Redirect to home page
+                        window.location.href = '/';
+                    } else {
+                        // Handle error response
+                        alert(result.error || 'Logout failed');
+                    }
+                } catch (error) {
+                    alert('An error occurred during logout');
+                }
+            };
+        } else {
+            loginLogoutButton.textContent = 'Login';
+            loginLogoutButton.onclick = () => {
+                window.location.href = '/login'; // Redirect to login page
+            };
+        }
+    });
+</script>
 </body>
 </html>
